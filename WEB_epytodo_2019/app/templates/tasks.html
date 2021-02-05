@@ -1,0 +1,151 @@
+<html>
+<title>Python Flask Mysql Login Logout with Remember Me Option and Password Hash</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
+</head>
+<body>
+ <div>
+  <span class="btn home_btn"><a href="/">Home</a></span>
+ </div>
+ <div class="container h-100">
+ <h1 align="center" class="h1_btn">Welcome {{ username }} !</h1>
+  <div class="d-flex justify-content-center h-100">
+   <div class="user_card">
+    <div class="d-flex justify-content-center form_container">
+     <form method="get" action="/user/task">
+      <div class="d-flex justify-content-center mt-3 title_container">
+       <h4 align="center" class="title_btn">Successfully {{ status }} !</h4>
+      </div>
+      <div class="d-flex justify-content-center">
+       <div class="check_logo_container">
+       <img src="{{ url_for('static', filename='img/check.webp') }}" class="check_logo" alt="Logo">
+       </div>
+      </div>
+      <div class="d-flex justify-content-center mt-3 login_container">
+      <input type="submit" value="Go to tasks" class="btn login_btn">
+      </div>
+      <div class="d-flex justify-content-center mt-3 login_container">
+      <span class="btn login_btn"><a href="signin">Disconnect</a></span>
+      </div>
+     </form>
+    </div>
+   </div>
+  </div>
+ </div>
+<style>
+  a {
+      color: white;
+  }
+  a:hover {
+   text-decoration: none;
+   color: white;
+  }
+  body,
+  html {
+   margin: 0;
+   padding: 0;
+   height: 100%;
+   background: #60a3bc !important;
+  }
+  h1 {
+    margin-top: 30px;
+  }
+  .home_btn {
+   margin-left: 20px;
+   margin-top: 95px;
+   float: left;
+   background: #c0392b !important;
+   color: white !important;
+  }
+  .user_card {
+   height: 350px;
+   width: 350px;
+   margin-top: 10%;
+   margin-bottom: auto;
+   background: #f39c12;
+   position: relative;
+   display: flex;
+   justify-content: center;
+   flex-direction: column;
+   padding: 10px;
+   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   border-radius: 5px;
+
+  }
+  .check_logo_container {
+   position: absolute;
+   height: 100px;
+   width: 100px;
+   bottom: 140px;
+   border-radius: 50%;
+   background: white;
+   text-align: center;
+  }
+  .check_logo {
+   margin-top: -35px;
+   margin-left: -25px;
+   height: 180px;
+   width: 150px;
+  }
+  .form_container {
+   margin-top: 10px;
+  }
+  .h1_btn {
+   padding: 100px 0px 10px 0px;
+   width: 50%;
+   margin-top: -80px;
+   margin-left: auto;
+   margin-right: auto;
+   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   border-radius: 15px;
+   background: #b8d2ff !important;
+  }
+  .title_btn {
+   padding: 10px 30px 10px 30px;
+   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   border-radius: 15px;
+   background: #2474ff !important;
+  }
+  .login_btn {
+   width: 50%;
+   background: #c0392b !important;
+   color: white !important;
+  }
+  .login_btn:hover,
+  .home_btn:hover {
+   border: 1px solid black;
+   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   outline: 0px !important;
+  }
+  .title_container {
+   margin-bottom: 150px;
+  }
+  .login_container {
+   margin-top: 5px
+  }
+  .input-group-text {
+   background: #c0392b !important;
+   color: white !important;
+   border: 0 !important;
+   border-radius: 0.25rem 0 0 0.25rem !important;
+  }
+  .input_user,
+  .input_pass:focus {
+   box-shadow: none !important;
+   outline: 0px !important;
+  }
+  .custom-checkbox .custom-control-input:checked~.custom-control-label::before {
+   background-color: #c0392b !important;
+  }
+</style>
+</body>
+</html>

@@ -1,0 +1,345 @@
+<html>
+<title>Python Flask Mysql Login Logout with Remember Me Option and Password Hash</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
+</head>
+<body>
+ <div>
+  <span class="btn home_btn"><a href="/">Home</a></span>
+  <form class="signout_btn" method="post" action="/signout">
+   <input type="submit" value="Disconnect" class="btn disconnect_btn">
+  </form>
+ </div>
+  <div class="d-flex justify-content-center h-90">
+   <div class="task_card">
+    <div class="d-flex justify-content-center h2_container">
+      <h2 align="center" class="h2_style">{{ username }}'s tasks:</h2>
+    </div>
+    <div class="d-flex justify-content-center task_container">
+     <ul class="task_list">
+       {% for title, id, status in tasks %}
+      <li class="tasks">
+       <div class="info_task_container">
+       <div class="title_task">
+        {{ title|e }}
+       </div>
+       <div class="info_name">
+          ID:
+       </div>
+       <div class="info_task">
+        #{{ id|e }}
+       </div>
+       <div class="info_name">
+          Status:
+       </div>
+       <div class="info_task">
+        {{ status|e }}
+       </div>
+       </div>
+       </li>
+       {% endfor %}
+     </ul>
+    </div>
+    <div class="d-flex justify-content-center form_container">
+      <div class="d-flex justify-content-center mt-3 login_container">
+      <button type="submit" class="btn login_btn" onclick="openAddForm()">Add task</button>
+      </div>
+      <div class="d-flex justify-content-center mt-3 login_container">
+      <button type="submit" class="btn login_btn" onclick="openModForm()">Modify task</button>
+      </div>
+      <div class="d-flex justify-content-center mt-3 login_container">
+      <button type="submit" class="btn login_btn" onclick="openDelForm()">Remove task</button>
+      </div>
+    </div>
+   </div>
+   <div class="form-popup" id="addForm">
+    <form method = "post" action="/user/task/add" class="add-form-container">
+    <h1>Add task</h1>
+     <div class="add-task">
+      <input type="text" placeholder="Task Name" name="title" required>
+     </div>
+     <div class="add-task">
+      <input type="text" placeholder="ID" name="task_id" required>
+     </div>
+     <div>
+      <button type="submit" class="btn login_btn">Add</button>
+     </div>
+    </form>
+    <div class="close_btn_container">
+     <button class="btn login_btn" onclick="closeAddForm()">Close</button>
+    </div>
+   </div>
+   <div class="form-popup" id="modForm">
+    <form method = "post" action="/user/task/id" class="add-form-container">
+    <h1>Modify task</h1>
+     <div class="add-task">
+      <input type="text" placeholder="Task ID" name="task_id" required>
+     </div>
+     <div class="add-task">
+      <select name="status" required>
+       <option value="todo">To do</option>
+       <option value="doing">Doing</option>
+       <option value="done">Done</option>
+      </select>
+     </div>
+     <div>
+      <button type="submit" class="btn login_btn">Modify</button>
+     </div>
+    </form>
+    <div class="close_btn_container">
+     <button class="btn login_btn" onclick="closeModForm()">Close</button>
+    </div>
+   </div>
+   <div class="form-popup" id="delForm">
+    <form method = "post" action="/user/task/del/id" class="add-form-container">
+    <h1>Delete task</h1>
+     <div class="add-task">
+      <input type="text" placeholder="ID" name="task_id" required>
+     </div>
+     <div>
+      <button type="submit" class="btn login_btn">Delete</button>
+     </div>
+    </form>
+    <div class="close_btn_container">
+     <button class="btn login_btn" onclick="closeDelForm()">Close</button>
+    </div>
+   </div>
+  </div>
+<style>
+  a {
+      color: white;
+  }
+  a:hover {
+   text-decoration: none;
+   color: white;
+  }
+  body,
+  html {
+   margin: 0;
+   padding: 0;
+   height: 100%;
+   background: #60a3bc !important;
+  }
+  h1 {
+   margin-top: 30px;
+  }
+  .h2_style {
+    color: black;
+  }
+  .info_task_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .task_list {
+    list-style-type: none;
+    display: flex;
+  }
+  .tasks {
+   width: 150px;
+   height: 250px;
+   margin-left: 15px;
+   margin-right: 15px;
+   background: #c47eed !important;
+   color: white !important;
+   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   border-radius: 5px;
+   text-align: center;
+  }
+  .title_task {
+   margin-bottom: 35px;
+   padding-top: 15px;
+   padding-bottom: 15px;
+   background: #fc2323 !important;
+   color: white !important;
+   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   border-radius: 5px;
+   text-align: center;
+  }
+  .info_name {
+   color: black !important;
+   text-align: center;
+  }
+  .info_task {
+   margin: 5px auto 30px auto;
+   padding-left: 10px;
+   padding-right: 10px;
+   background: #ff8a8a !important;
+   color: white !important;
+   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   border-radius: 5px;
+   text-align: center;
+  }
+  .signout_btn {
+    display: inline;
+  }
+  .home_btn {
+   margin-left: 20px;
+   margin-top: 15px;
+   background: #c0392b !important;
+   color: white !important;
+  }
+  .disconnect_btn {
+   float: right;
+   margin-right: 20px;
+   margin-top: 15px;
+   background: #c0392b !important;
+   color: white !important;
+  }
+  .task_card {
+   height: 520px;
+   width: 1200px;
+   margin-top: 20px;
+   margin-bottom: auto;
+   background: #f39c12;
+   position: relative;
+   display: flex;
+   justify-content: center;
+   flex-direction: column;
+   padding: 10px;
+   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   border-radius: 5px;
+
+  }
+  .check_logo_container {
+   position: absolute;
+   height: 100px;
+   width: 100px;
+   bottom: 140px;
+   border-radius: 50%;
+   background: white;
+   text-align: center;
+  }
+  .check_logo {
+   margin-top: -35px;
+   margin-left: -25px;
+   height: 180px;
+   width: 150px;
+  }
+  .h2_container {
+   height: 10px;
+   margin-top: 10px;
+  }
+  .task_container {
+   overflow: auto;
+   padding-top: 60px;
+  }
+  .form_container {
+   margin-top: 10px;
+  }
+  .h1_btn {
+   padding: 100px 0px 10px 0px;
+   width: 50%;
+   margin-top: -80px;
+   margin-left: auto;
+   margin-right: auto;
+   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   border-radius: 15px;
+   background: #b8d2ff !important;
+  }
+  .title_btn {
+   padding: 10px 30px 10px 30px;
+   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   border-radius: 15px;
+   background: #2474ff !important;
+  }
+  .login_btn {
+   background: #c0392b !important;
+   color: white !important;
+   margin-left: 100px;
+   margin-right: 100px;
+  }
+  .login_btn:hover,
+  .home_btn:hover {
+   border: 1px solid black;
+   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   outline: 0px !important;
+  }
+  .title_container {
+   margin-bottom: 150px;
+  }
+  .login_container {
+   padding-top: 50px
+  }
+  .input-group-text {
+   background: #c0392b !important;
+   color: white !important;
+   border: 0 !important;
+   border-radius: 0.25rem 0 0 0.25rem !important;
+  }
+  .input_user,
+  .input_pass:focus {
+   box-shadow: none !important;
+   outline: 0px !important;
+  }
+  .form-popup {
+   display: none;
+   position: fixed;
+   margin: 100px auto auto auto;
+   color: white;
+   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   border-radius: 5px;
+   background: #4d2000;
+   z-index: 9;
+ }
+ .form-popup button {
+   margin-top: 10px;
+   margin-bottom: 10px;
+   min-width: 80px;
+ }
+ .add-form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  width: 350px;
+ }
+ .add-task {
+  margin: 5px auto 30px auto;
+  padding-left: 10px;
+  padding-right: 10px;
+ }
+ .close_btn_container {
+  margin-top: -10px;
+  text-align: center;
+ }
+</style>
+<script>
+  function openAddForm() {
+    document.getElementById("addForm").style.display = "block";
+  }
+  function closeAddForm() {
+    document.getElementById("addForm").style.display = "none";
+  }
+  function openModForm() {
+    document.getElementById("modForm").style.display = "block";
+  }
+  function closeModForm() {
+    document.getElementById("modForm").style.display = "none";
+  }
+  function openDelForm() {
+    document.getElementById("delForm").style.display = "block";
+  }
+  function closeDelForm() {
+    document.getElementById("delForm").style.display = "none";
+  } 
+</script>
+</body>
+</html>
